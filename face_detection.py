@@ -7,12 +7,8 @@ import cvlib as cv
 import threading
 import face_recognition
 
-#Result CompareFace
 list_encode = []
-# list_distance = []
-# list_compare = []
-
-webcam = cv2.VideoCapture(1)
+webcam = cv2.VideoCapture(0)
 width = int(webcam.get(3))
 height = int(webcam.get(4))
 
@@ -31,7 +27,6 @@ def encodeImg() :
     except :
         pass
 
-
 def detectFace(face, frame) :
     card = False
     img = False
@@ -42,12 +37,12 @@ def detectFace(face, frame) :
 
             if endX <= int(width/2)-25 and endY <= int(height/2)+75 and startX > 25 and startY > 150:
                 cv2.imwrite("image/card.jpg",frame[startY:endY,startX:endX])
-                cv2.rectangle(frame, (startX,startY), (endX,endY), (0,255,0), 2)
+                cv2.rectangle(frame, (startX,startY), (endX,endY), (0,255,0), 1)
                 card = True 
 
             if endX >= width/2 :
                 cv2.imwrite("image/face.jpg",frame[startY:endY,startX:endX])
-                cv2.rectangle(frame, (startX,startY), (endX,endY), (0,255,0), 2)
+                cv2.rectangle(frame, (startX,startY), (endX,endY), (0,255,0), 1)
                 img = True
 
             cv2.imwrite("test_images/full.jpg", frame)
@@ -74,7 +69,7 @@ def main() :
 
             # apply face detection
             face, confidence = cv.detect_face(frame)
-            cv2.rectangle(frame,(25, 150), (int(width/2)-25, int(height/2)+75), (0, 255, 0), 4)
+            cv2.rectangle(frame,(25, 150), (int(width/2)-25, int(height/2)+75), (0, 255, 0), 2)
 
             saved = detectFace(face, frame)
             # cv2.imshow("detection", frame)
@@ -100,9 +95,11 @@ def main() :
             result = face_recognition.compare_faces([list_encode[0][0]], list_encode[0][1])
             # list_distance.append(face_distances)
             # list_compare.append(result)
-            percentage = (1 - face_distances)*100
+            # percentage = (1 - face_distances[0])*100
+            percentage = (1 - face_distances[0])*100
+            percentage = "{:.2f}".format(percentage)
 
-            cv2.putText(frame, ("Percent:" + str(percentage) +" Match: "+str(result)),(10,50),cv2.FONT_HERSHEY_SIMPLEX,1,(209, 80, 0, 255),3)
+            cv2.putText(frame, ("Percent: " + percentage +" Match: "+ str(result[0])),(10,50),cv2.FONT_HERSHEY_SIMPLEX,1,(209, 80, 0, 255),2)
             # print("Percentage: {percentage}     Math: {result}")
             ret, buffer = cv2.imencode('.jpg', frame)
             f = buffer.tobytes()
