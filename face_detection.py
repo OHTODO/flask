@@ -102,6 +102,7 @@ def main() :
             cv2.putText(frame, ("Percent: " + percentage +" Match: "+ str(result[0])),(10,50),cv2.FONT_HERSHEY_SIMPLEX,1,(209, 80, 0, 255),2)
             # print("Percentage: {percentage}     Math: {result}")
             ret, buffer = cv2.imencode('.jpg', frame)
+            
             f = buffer.tobytes()
             yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + f + b'\r\n')
