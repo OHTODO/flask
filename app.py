@@ -1,3 +1,4 @@
+from os import truncate
 from flask import Flask, render_template, Response
 app=Flask(__name__)
 import face_detection as fd
@@ -14,4 +15,4 @@ def video_feed():
 def video_fr():
     return Response(fr.main("test_images/full.jpg"), mimetype='multipart/x-mixed-replace; boundary=frame')
 if __name__=='__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
